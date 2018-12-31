@@ -2,12 +2,24 @@
 // key: タスクの文字列 value: 完了しているかどうかの真偽値
 let tasks = new Map();
 
+const fs = requre('fs');
+const fileName = './tasks.json';
+
+/**
+* タスクをファイルに保存する
+*/
+
+function saveTasks() {
+	fs.writeFileSync(fileName, JSON.stringify(Array.from(tasks)), 'utf8');
+}
+
 /**
 * TODO を追加する
 * @param {string} task
 */
 function todo(task) {
-    tasks.set(task, false);
+	tasks.set(task, false);
+	saveTasks();
 }
 
 /**
@@ -16,7 +28,7 @@ function todo(task) {
 * @return {boolean} 完了したかどうか
 */
 function isDone(taskAndIsDonePair) {
-    return taskAndIsDonePair[1];
+	return taskAndIsDonePair[1];
 }
 
 /**
@@ -25,7 +37,7 @@ function isDone(taskAndIsDonePair) {
 * @return {boolean} 完了していないかどうか
 */
 function isNotDone(taskAndIsDonePair) {
-    return !isDone(taskAndIsDonePair);
+	return !isDone(taskAndIsDonePair);
 }
 
 /**
@@ -33,18 +45,19 @@ function isNotDone(taskAndIsDonePair) {
 * @return {array}
 */
 function list() {
-    return Array.from(tasks)
-        .filter(isNotDone)
-        .map(t => t[0]);
+	return Array.from(tasks)
+		.filter(isNotDone)
+		.map(t => t[0]);
 }
 
 /**
 * TODOを完了状態にする
 * @param {string} task
 */
-function done(task){
-	if (tasks.has(task)){
-		tasks.set(task,true);
+function done(task) {
+	if (tasks.has(task)) {
+		tasks.set(task, true);
+		saveTasks();
 	}
 }
 
@@ -52,25 +65,26 @@ function done(task){
 * 完了済みのタスクの一覧の配列を取得する
 * @return {array}
 */
-function donelist(){
+function donelist() {
 	return Array.from(tasks)
-	.filter(isDone)
-	.map(t=>t[0]);
+		.filter(isDone)
+		.map(t => t[0]);
 }
 
 /**
 * 項目を削除する
 * @param {string} task
 */
-function del(task){
+function del(task) {
 	tasks.delete(task);
+	saveTasks();
 }
 
 
 module.exports = {
-    todo: todo,
-    list: list,
+	todo: todo,
+	list: list,
 	done: done,
 	donelist: donelist,
-	del:del
+	del: del
 };
