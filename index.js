@@ -5,10 +5,19 @@ let tasks = new Map();
 const fs = require('fs');
 const fileName = './tasks.json';
 
+// 同期的にファイルから復元
+try{
+	const data = fs.readFileSync(fileName,'utf8');
+	tasks = new Map(JSON.parse(data));
+}catch(ignore){
+	console.log(fileName + 'から復元できませんでした');
+}
+
+
+
 /**
 * タスクをファイルに保存する
 */
-
 function saveTasks() {
 	fs.writeFileSync(fileName, JSON.stringify(Array.from(tasks)), 'utf8');
 }
